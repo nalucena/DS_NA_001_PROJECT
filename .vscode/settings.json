@@ -1,5 +1,3 @@
 {
     "editor.defaultFormatter": "ms-python.black-formatter",
-    "flake8.logLevel": "info",
-    "python.linting.flake8CategorySeverity.E": "Information"
 }
