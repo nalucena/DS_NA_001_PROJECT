@@ -61,7 +61,7 @@ def column_creator(database, column_name):
             elif (column_name + " outros") in database:
                 for i in range(0, len(database)):
                     if item in database[column_name][i]:
-                        database[column_name + " outros"][i] = +1
+                        database[column_name + " outros"][i] += 1
 
         # Limit the creation of new columns to 10!
         if len(columns_dict) > 9:
@@ -71,7 +71,7 @@ def column_creator(database, column_name):
 
             # Remove excessive columns by condensing them in "outros"
             to_remove = min(columns_dict, key=columns_dict.get)
-            database[column_name + " outros"] = +database[to_remove]
+            database[column_name + " outros"] += database[to_remove]
             database.drop(to_remove, axis=1, inplace=True)
             del columns_dict[to_remove]
 
