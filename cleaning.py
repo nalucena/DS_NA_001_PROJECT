@@ -37,18 +37,31 @@ def column_creator(database, column_name):
 
     for item in items_list:
 
-        # Add the new column
-        database[column_name + " " + item] = 0
+        if item != "outros":
+            # Add new columns
+            database[column_name + " " + item] = 0
 
-        for i in range(0, len(database)):
-            if item in database[column_name][i]:
-                database[column_name + " " + item][i] = 1
+            for i in range(0, len(database)):
+                if item in database[column_name][i]:
+                    database[column_name + " " + item][i] = 1
 
-        # Populate columns_dict ("outros" column should not be added to columns_dict)
-        if column_name + " " + item != column_name + " outros":
+            # Track new columns in columns_dict
             columns_dict[column_name + " " + item] = database[
                 column_name + " " + item
             ].sum()
+
+        elif item == "outros":
+            # Check if "outros" column in database
+            if (column_name + " outros") not in database:
+                database[column_name + " outros"] = 0
+                for i in range(0, len(database)):
+                    if item in database[column_name][i]:
+                        database[column_name + " outros"][i] = 1
+
+            elif (column_name + " outros") in database:
+                for i in range(0, len(database)):
+                    if item in database[column_name][i]:
+                        database[column_name + " outros"][i] = +1
 
         # Limit the creation of new columns to 10!
         if len(columns_dict) > 9:
