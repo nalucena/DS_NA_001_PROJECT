@@ -9,8 +9,6 @@ file_list = [
 
 # Select files based on last digits:
 title_files = [f for f in file_list if f[-10:] == "titles.csv"]
-# credit_files = [f for f in file_list if f[-11:] == "credits.csv"]
-
 
 #  Creating functions:
 def extract_items(database_name, column_name):
@@ -27,6 +25,9 @@ def extract_items(database_name, column_name):
     for i in range(0, len(items)):
         items[i] = items[i].strip("'")
 
+        if items[i] == "":
+            items[i] = "outros"
+
     return items
 
 
@@ -36,26 +37,26 @@ def column_creator(database, column_name):
 
     for item in items_list:
 
+        # Add the new column
         database[column_name + " " + item] = 0
 
-        # Populates the column
         for i in range(0, len(database)):
             if item in database[column_name][i]:
                 database[column_name + " " + item][i] = 1
 
-        # Do not add "outros" to columns_dict
+        # Populate columns_dict ("outros" column should not be added to columns_dict)
         if column_name + " " + item != column_name + " outros":
             columns_dict[column_name + " " + item] = database[
                 column_name + " " + item
             ].sum()
 
-        # Check if "outros" is in database, if not, add it!
-        if len(columns_dict) == 9:
+        # Limit the creation of new columns to 10!
+        if len(columns_dict) > 9:
+            # Check if "outros" column is in database:
             if (column_name + " outros") not in database:
                 database[column_name + " outros"] = 0
 
-        # Remove excessive columns by condensing them!
-        if len(columns_dict) > 9:
+            # Remove excessive columns by condensing them in "outros"
             to_remove = min(columns_dict, key=columns_dict.get)
             database[column_name + " outros"] = +database[to_remove]
             database.drop(to_remove, axis=1, inplace=True)
