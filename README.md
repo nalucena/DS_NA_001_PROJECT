@@ -1,7 +1,7 @@
 <div align="center">
 <h2>Análise com PowerBi</h2>
 <h1> Netflix | Amazon | HBO
-    <img alt="Night Coding" src="capa.jpeg" align="right"/>
+    <img alt="Print_do_Dashboard" src="capa.jpeg" align="right"/>
 </h1>
 </div> 
 &nbsp;
