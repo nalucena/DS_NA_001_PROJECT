@@ -9,6 +9,8 @@ file_list = [
 
 # Select files based on last digits:
 title_files = [f for f in file_list if f[-10:] == "titles.csv"]
+credit_files = [f for f in file_list if f[-11:] == "credits.csv"]
+
 
 #  Creating functions:
 def extract_items(database_name, column_name):
@@ -31,37 +33,30 @@ def extract_items(database_name, column_name):
     return items
 
 
+def streamer_column(database, file):
+    database["streamer"] = file[:-11]
+    return database
+
+
 def column_creator(database, column_name):
     items_list = extract_items(database, column_name)
-    columns_dict = {}
 
     for item in items_list:
+        # Add new columns
+        database[column_name + " " + item] = 0
 
-        if item != "outros":
-            # Add new columns
-            database[column_name + " " + item] = 0
+        for i in range(0, len(database)):
+            if item in database[column_name][i]:
+                database[column_name + " " + item][i] = 1
 
-            for i in range(0, len(database)):
-                if item in database[column_name][i]:
-                    database[column_name + " " + item][i] = 1
 
-            # Track new columns in columns_dict
-            columns_dict[column_name + " " + item] = database[
-                column_name + " " + item
-            ].sum()
-
-        elif item == "outros":
-            # Check if "outros" column in database
-            if (column_name + " outros") not in database:
-                database[column_name + " outros"] = 0
-                for i in range(0, len(database)):
-                    if item in database[column_name][i]:
-                        database[column_name + " outros"][i] = 1
-
-            elif (column_name + " outros") in database:
-                for i in range(0, len(database)):
-                    if item in database[column_name][i]:
-                        database[column_name + " outros"][i] += 1
+def column_trimmer(database, column_name):
+    columns_dict = {}
+    for item in database.columns:
+        if item == column_name + " outros":
+            continue
+        elif item[: len(column_name) + 1] == column_name + " ":
+            columns_dict[item] = database[item].sum()
 
         # Limit the creation of new columns to 10!
         if len(columns_dict) > 9:
@@ -77,8 +72,26 @@ def column_creator(database, column_name):
 
 
 # Passing functions through files:
+title_base = pd.DataFrame()
+
 for file in title_files:
     database = pd.read_csv("BD/" + file)
+    database.drop("description", axis=1, inplace=True)
+    database = streamer_column(database, file)
     column_creator(database, "genres")
     column_creator(database, "production_countries")
-    database.to_csv("Cleaned_BD/cleaned_" + file)
+
+    title_base = pd.concat([title_base, database], axis=0)
+
+column_trimmer(title_base, "genres")
+column_trimmer(title_base, "production_countries")
+
+title_base.to_csv("Cleaned_BD/cleaned_base.csv")
+
+credits_base = pd.DataFrame()
+
+for file in credit_files:
+    database = pd.read_csv("BD/" + file)
+    credits_base = pd.concat([credits_base, database], axis=0)
+
+credits_base.to_csv("Cleaned_BD/cleaned_credits.csv")
