@@ -1,7 +1,7 @@
 <div align="center">
 <h2>Análise com PowerBi</h2>
 <h1> Netflix | Amazon | HBO
-    <img alt="Print_do_Dashboard" src="capa.jpeg" align="right"/>
+   
 </h1>
 </div> 
 &nbsp;
@@ -15,7 +15,7 @@ Foram analizados as seguintes bases de dados do kaggle:
  | _ [Netflix](https://www.kaggle.com/datasets/victorsoeiro/netflix-tv-shows-and-movies?select=titles.csv)
   _ | _ [HBO](https://www.kaggle.com/datasets/victorsoeiro/hbo-max-tv-shows-and-movies?select=titles.csv)
   _ | _ [Amazon](https://www.kaggle.com/datasets/victorsoeiro/amazon-prime-tv-shows-and-movies?select=titles.csv) _ |
-- Contudo pode ser adicionado outras bases que o PowerBi ja está configurado para detectar e atualizar automáticamente.
+- Contudo pode ser adicionado outras bases no python que já esta configurado para filtrar e deixa-la preparada para o power query.
 - Os dados foram tratados com o Python antes em uma segunda etapa foram adicionados no power query para refinar e apresentar no dash, comparando as diferentes plataformas de streaming analizando filmes e séries.
 </div> 
 &nbsp;
