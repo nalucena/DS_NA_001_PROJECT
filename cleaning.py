@@ -14,6 +14,7 @@ credit_files = [f for f in file_list if f[-11:] == "credits.csv"]
 
 #  Creating functions:
 def extract_items(database_name, column_name):
+    """Extrair os varios atributos existentes em uma coluna"""
     column_copy = database_name[column_name].str.strip("[]")
     column_copy = column_copy.str.split(", ")  # Transforms str into list
 
@@ -34,11 +35,13 @@ def extract_items(database_name, column_name):
 
 
 def streamer_column(database, file):
+    """Criar uma coluna para identificar a plataforma de stream"""
     database["streamer"] = file[:-11]
     return database
 
 
 def column_creator(database, column_name):
+    """Cria uma coluna para cada atributo identificado"""
     items_list = extract_items(database, column_name)
 
     for item in items_list:
@@ -51,6 +54,7 @@ def column_creator(database, column_name):
 
 
 def column_trimmer(database, column_name):
+    """Reduz a quantidade de colunas a 10, para facilitar a analise"""
     columns_dict = {}
     for item in database.columns:
         if item == column_name + " outros":
@@ -58,7 +62,6 @@ def column_trimmer(database, column_name):
         elif item[: len(column_name) + 1] == column_name + " ":
             columns_dict[item] = database[item].sum()
 
-        # Limit the creation of new columns to 10!
         if len(columns_dict) > 9:
             # Check if "outros" column is in database:
             if (column_name + " outros") not in database:
